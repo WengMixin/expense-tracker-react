@@ -1,31 +1,30 @@
-/*
- * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @Date: 2023-06-02 16:56:13
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-06-02 17:57:16
- * @FilePath: /expense-tracker-react/src/components/Transaction.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
-import React, { useContext } from "react";
-import { GlobalContext } from "../context/GlobalState";
+import React, {useContext} from 'react';
+import { GlobalContext } from '../context/GlobalState';
+
+//Money formatter function
+function moneyFormatter(num) {
+  let p = num.toFixed(2).split('.');
+  return (
+    '$ ' +
+    p[0]
+      .split('')
+      .reverse()
+      .reduce(function (acc, num, i, orig) {
+        return num === '-' ? acc : num + (i && !(i % 3) ? ',' : '') + acc;
+      }, '') +
+    '.' +
+    p[1]
+  );
+}
 
 export const Transaction = ({ transaction }) => {
   const { deleteTransaction } = useContext(GlobalContext);
 
-  const sign = transaction.amount < 0 ? "-" : "+";
+  const sign = transaction.amount < 0 ? '-' : '+';
 
   return (
-    <li className={transaction.amount < 0 ? "minus" : "plus"}>
-      {transaction.text}
-      <span>
-        {sign}${Math.abs(transaction.amount)}
-      </span>
-      <button
-        onClick={() => deleteTransaction(transaction.id)}
-        className="delete-btn"
-      >
-        x
-      </button>
+    <li className={transaction.amount < 0 ? 'minus' : 'plus'}>
+      {transaction.text} <span>{sign}{moneyFormatter(transaction.amount)}</span><button onClick={() => deleteTransaction(transaction.id)} className="delete-btn">x</button>
     </li>
-  );
-};
+  )
+}
